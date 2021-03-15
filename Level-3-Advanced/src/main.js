@@ -5,7 +5,7 @@
 // forEach(['a','b','c'], callback); → prints a,0,['a','b','c'] b,1,['a','b','c'] c,2,['a','b','c']
 // For each element in the array, the callback we passed is called. The callback can be customized, but in the above example, the callback prints out the element, index, and entire array.
 function forEach(array, callback) {
-\	for (let i = 0; i < array.length; i++) { // i = 0
+	for (let i = 0; i < array.length; i++) { // i = 0
 		callback(array[i], i, array) // 2
 	}
 }
@@ -151,27 +151,30 @@ const multBy2 = (input) => {
 // reduce([1,2], function(stored,current) {
 //  return stored + current;
 // },1); → 4
-function reduce(array, callback, start) {
-  let results;
-  
-  for (let i = 0; i < array.length; i++) {
-    if (i === 0) {
-      results = array[i]
-    } else {
-      results = results + array[i]
+function reduce(array, callback, start) { // start = 5
+  let results; // 6
+
+  if (start === undefined) {
+    results = array[0]
+    for (let i = 1; i < array.length; i++) {
+      results = callback(results, array[i])
+    }
+  } else {
+    results = start
+    for (let i = 0; i < array.length; i++) {
+      results = callback(results, array[i])
     }
   }
-  console.log('hi')
   return results
 }
 
-const testArr = [1, 2, 3]
+// const testArr = [1, 2, 3]
 
-// function myCB(element) {
-//   return element * 2
+// function myCB(acc, val, idx, arr) {
+//   return acc + val
 // }
 
-console.log(reduce(testArr))
+// console.log(reduce(testArr, myCB, 5))
 
 // function test(red, white, blue) {
 //   console.log(red)
@@ -192,19 +195,57 @@ console.log(reduce(testArr))
 //   return elem % 2 == 0;
 // });  -> false
 // BONUS: use reduce in your answer
-function every(array, func) {
-	//CODE HERE
+const every = (array, func) => {
+  for (let i = 0; i < array.length; i++) {
+    if (!func(array[i])) {
+      return false;
+    } 
+  }
 
+  return true; 
 }
+
+// const testArr = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+// const testArr2 = [3, 6, 6, 9, 12]
+// const testArr3 = [1, 2, 5, 7, 9]
+
+// const isDivisibleByThree = num => num % 3 === 0
+
+// const isOdd = num => num % 2 !== 0;
+
+// // console.log('false =>', every(testArr, isDivisibleByThree)) // false
+// console.log('true =>', every(testArr2, isDivisibleByThree)) // true
+// console.log('false =>', every(testArr3, isOdd)) // 
+
+
 
 // Flattens a nested array.
-// flatten([1, [2, 3, [4]]]); → [1, 2, 3, [4]]
-function flatten(array) {
-
+// flatten([1, [2, 3, [4]]]); → [1, 2, 3, [4]] // array.length = 2, array[i].length = 3, array[i][j].length = 1
+const flatten = array => {  // [1, [2, 3, [4]]] [val, array]
+  let results = []
+  for (let i = 0; i < array.length; i++) {
+    if (!Array.isArray(array[i])) {
+      results.push(array[i])
+    } else {
+      for (let j = 0; j < array[i].length; j++) {
+          results.push(array[i][j])
+      }
+    }
+  }
+  return results 
 }
+
+const testArr = [{"red": 1}, [2, 3, [4]]]
+
+console.log(flatten(testArr))
 
 // Recursively flattens a nested array.
 // flattenDeep([1, [2, 3, [4]]]); → [1, 2, 3, 4]
 function flattenDeep(array) {
-
+  
 }
+
+// const testArr = [1, [2, 3, [4]]]
+
+// console.log(flattenDeep(testArr))
+
