@@ -161,7 +161,7 @@ function reduce(array, callback, start) {
       results = results + array[i]
     }
   }
-  
+  console.log('hi')
   return results
 }
 
