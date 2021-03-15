@@ -157,12 +157,12 @@ function reduce(array, callback, start) { // start = 5
   if (start === undefined) {
     results = array[0]
     for (let i = 1; i < array.length; i++) {
-      results = callback(results, array[i])
+      results = callback(results, array[i], i)
     }
   } else {
     results = start
     for (let i = 0; i < array.length; i++) {
-      results = callback(results, array[i])
+      results = callback(results, array[i], i)
     }
   }
   return results
@@ -195,14 +195,23 @@ function reduce(array, callback, start) { // start = 5
 //   return elem % 2 == 0;
 // });  -> false
 // BONUS: use reduce in your answer
-const every = (array, func) => {
-  for (let i = 0; i < array.length; i++) {
-    if (!func(array[i])) {
-      return false;
-    } 
-  }
+// const every = (array, func) => {
+//   for (let i = 0; i < array.length; i++) {
+//     if (!func(array[i])) {
+//       return false;
+//     } 
+//   }
 
-  return true; 
+//   return true; 
+// }
+
+const every = (arr, cb) => {
+  const isFalse = (result, item) => {
+    if (!cb(item)) return false;
+    return result;
+  }
+  
+  return reduce(arr, isFalse, true)
 }
 
 // const testArr = [1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -213,16 +222,24 @@ const every = (array, func) => {
 
 // const isOdd = num => num % 2 !== 0;
 
-// // console.log('false =>', every(testArr, isDivisibleByThree)) // false
+// console.log('false =>', every(testArr, isDivisibleByThree)) // false
 // console.log('true =>', every(testArr2, isDivisibleByThree)) // true
 // console.log('false =>', every(testArr3, isOdd)) // 
+const colorArr = ['red', 'blue', 'yellow']
+const buildCountObj = (result, item, idx) => {
+  result[item] = idx + 1
+  return result
+}
+// const reduceObj = reduce(colorArr, buildCountObj, {}) 
+// console.log(reduceObj)
 
-
+// console.log('Hello')
 
 // Flattens a nested array.
 // flatten([1, [2, 3, [4]]]); → [1, 2, 3, [4]] // array.length = 2, array[i].length = 3, array[i][j].length = 1
 const flatten = array => {  // [1, [2, 3, [4]]] [val, array]
   let results = []
+  
   for (let i = 0; i < array.length; i++) {
     if (!Array.isArray(array[i])) {
       results.push(array[i])
@@ -235,17 +252,26 @@ const flatten = array => {  // [1, [2, 3, [4]]] [val, array]
   return results 
 }
 
-const testArr = [{"red": 1}, [2, 3, [4]]]
+// const testArr = [{"red": 1}, [2, 3, [4]]]
 
-console.log(flatten(testArr))
+// console.log(flatten(testArr))
 
 // Recursively flattens a nested array.
-// flattenDeep([1, [2, 3, [4]]]); → [1, 2, 3, 4]
-function flattenDeep(array) {
-  
+// flattenDeep([1, [2, 3, [4]]]); → [1, 2, 3, 4] 
+function flattenDeep(array, result = []) {
+  if (array.length === 0) {
+    return result
+  }
+
+  if (!Array.isArray(array[0])) {
+    result.push(array[0])
+  } else {
+    result.concat(flattenDeep(array[0], result))
+  }
+
+  return flattenDeep(array.slice(1), result)
 }
 
-// const testArr = [1, [2, 3, [4]]]
+const testArrFinal = [1, [2, 3, [4], 5, [6, 7, [8]],9, [10], [], undefined]]
 
-// console.log(flattenDeep(testArr))
-
+console.log(flattenDeep(testArrFinal))
